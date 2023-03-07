@@ -1,16 +1,15 @@
-import java.util.Arrays;
+import java.util.*;
 class Solution {
     public String solution(String s) {
         String answer = "";
-        
+        List<Integer> list = new ArrayList<>();
         String[] str = s.split(" ");
-        int[] arr = new int[str.length];
         for(int i=0; i<str.length; i++){
-            arr[i] = Integer.parseInt(str[i]);
+            list.add(Integer.parseInt(str[i]));
         }
-        Arrays.sort(arr);
         
-        answer += arr[0] + " " + arr[arr.length-1];
+        Collections.sort(list);
+        answer += list.get(0) + " " + list.get(list.size() -1);
         return answer;
     }
 }
