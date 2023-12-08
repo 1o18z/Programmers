@@ -3,36 +3,54 @@ import java.util.HashMap;
 
 class Solution {
 
-  public int solution(int[] bandage, int health, int[][] attacks) {
-    Map<Integer, Integer> map = new HashMap<>();
-    int size = attacks[attacks.length - 1][0];
-    int currentHealth = health;
-    int count = 0;
+  static Map<Integer, Integer> map = new HashMap<>();
+  static int currentHealth;
+  static int count = 0;
 
-    for (int i = 0; i < attacks.length; i++) {
-      map.put(attacks[i][0], attacks[i][1]);
+  public int solution(int[] bandage, int health, int[][] attacks) {
+    currentHealth = health;
+    int size = attacks[attacks.length - 1][0];
+
+    for (int[] attack : attacks) {
+      map.put(attack[0], attack[1]);
     }
 
     for (int time = 1; time <= size; time++) {
-      if (map.containsKey(time)) {
-        currentHealth -= map.get(time);
-        count = 0;
-
+      if (isAttacked(time)) {
+        receiveAttack(time);
         if (currentHealth <= 0) {
           return -1;
         }
       } else {
-        count++;
-        currentHealth += bandage[1];
-        if (count == bandage[0]) {
-          count = 0;
-          currentHealth += bandage[2];
-        }
-        if (currentHealth > health) {
-          currentHealth = health;
-        }
+        charge(bandage, health);
       }
     }
     return currentHealth;
+  }
+
+  private boolean isAttacked(int time) {
+    return map.containsKey(time);
+  }
+
+  private void receiveAttack(int time) {
+    currentHealth -= map.get(time);
+    count = 0;
+  }
+
+  private void charge(int[] bandage, int health) {
+    count++;
+    currentHealth += bandage[1];
+
+    checkContinuous(bandage);
+    if (currentHealth > health) {
+      currentHealth = health;
+    }
+  }
+
+  private void checkContinuous(int[] bandage) {
+    if (count == bandage[0]) {
+      count = 0;
+      currentHealth += bandage[2];
+    }
   }
 }
